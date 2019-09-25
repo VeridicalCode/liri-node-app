@@ -59,16 +59,13 @@ const concertSearch = function (searchKey) {
 			}
 			else {
 				console.log(`Upcoming ${searchKey} concerts:`);
-				fs.appendFile('log.txt', `---- Upcoming ${searchKey} concerts: ----`, function (error) {
+				fs.appendFile('log.txt', `\n---- Upcoming ${searchKey} concerts: ----`, function (error) {
 					if (error) {
 						console.log(`AppendFile error: ${error}`);
 					}
 				})
 				for (let i = 0; i < bandJSON.length; i++) {
-					let resultString = `
-							${bandJSON[i].venue.name}
-							${bandJSON[i].venue.city}
-							${bandJSON[i].datetime}`;
+					let resultString = `\n${bandJSON[i].venue.name}\n${bandJSON[i].venue.city}\n${bandJSON[i].datetime}`; //use moment to make that mm/dd/yy
 
 					console.log(resultString);
 					fs.appendFile('log.txt', resultString, function (error) {
@@ -84,6 +81,19 @@ const concertSearch = function (searchKey) {
 
 const movieSearch = function (searchKey) {
 	console.log(`Searching for movie data...`);
+	let urlVar = `http://www.omdbapi.com/?apikey=trilogy&t=${searchKey}`
+	axios.get(urlVar)
+		.then(function (response) {
+			let movieJSON = response.data;
+			let resultString = `---- ${movieJSON.Title.toUpperCase()} ----\nYear: ${movieJSON.Year}\nCritical ratings: ${movieJSON.Ratings[0].Value} @IMDB, ${movieJSON.Ratings[1].Value} @Rotten Tomatoes\nProduced in ${movieJSON.Country}\nStarring ${movieJSON.Actors}\n\n${movieJSON.Plot}`;
+
+			console.log(resultString);
+			fs.appendFile('log.txt', `\n\n${resultString}`, function (error) {
+				if (error) {
+					console.log(`AppendFile error: ${error}`);
+				}
+			})
+		});
 }
 
 const spotifySearch = function (searchKey) {
@@ -95,13 +105,7 @@ const fireRandom = function (searchKey) {
 }
 
 promptUserAction();
-/* take these commands:
-concert-this
-
-This will search the Bands in Town Artist Events API ("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp") for an artist and render the following information about each event to the terminal:
-	Name of the venue
-	Venue location
-	Date of the Event (use moment to format this as "MM/DD/YYYY")
+/*
 
 spotify-this-song
 This will show the following information about the song in your terminal/bash window
