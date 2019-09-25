@@ -7,6 +7,29 @@ const fs = require("fs");
 const keys = require("./keys.js");
 //const spotify = new Spotify(keys.spotify);
 
+const parseInputString = function (userString) {
+	let searchKey = "";
+	if (userString.startsWith('concert-this')) {
+		searchKey = userString.slice(13);
+		concertSearch(searchKey); // call concert function
+	}
+	else if (userString.startsWith('movie-this')) {
+		searchKey = userString.slice(11);
+		movieSearch(searchKey); // call imdb function
+	}
+	else if (userString.startsWith('spotify-this-song')) {
+		searchKey = userString.slice(18);
+		spotifySearch(searchKey); // call spotify function
+	}
+	else if (userString.toLowerCase() == 'exit') {
+		exitProgram = true;
+	}
+	else // if not a valid prompt, error out
+	{
+		console.log(`Sorry, I didn't understand that input. Try again?`);
+	}
+}
+
 // parent function to tell user what is possible and fire inquirer process
 const promptUserAction = function () {
 	// give instructions
@@ -20,29 +43,12 @@ const promptUserAction = function () {
 	]).then(
 		function (inquirerResponse) {
 			let userString = inquirerResponse.userInput;
-			let searchKey = "";
-			if (userString.startsWith('concert-this')) {
-				searchKey = userString.slice(13);
-				concertSearch(searchKey); // call concert function
-			}
-			else if (userString.startsWith('movie-this')) {
-				searchKey = userString.slice(11);
-				movieSearch(searchKey); // call imdb function
-			}
-			else if (userString.startsWith('spotify-this-song')) {
-				searchKey = userString.slice(18);
-				spotifySearch(searchKey); // call spotify function
-			}
-			else if (userString.startsWith('do-what-it-says')) {
-				searchKey = userString.slice(16);
+
+			if (userString.startsWith('do-what-it-says')) {
 				fireRandom(); // call random.txt
 			}
-			else if (userString.toLowerCase() == 'exit') {
-				exitProgram = true;
-			}
-			else // if not a valid prompt, error out
-			{
-				console.log(`Sorry, I didn't understand that input. Try again?`);
+			else {
+				parseInputString(userString);
 			}
 		});
 }
@@ -100,8 +106,14 @@ const spotifySearch = function (searchKey) {
 	console.log(`Searching for song data...`);
 }
 
-const fireRandom = function (searchKey) {
+const fireRandom = function () {
 	console.log(`Checking for external commands...`);
+	fs.readFile('./random.txt', 'utf8', (error, data) => {
+		if (error) {
+			console.log(`readFile error: ${error}`);
+		}
+		parseInputString(data);
+	});
 }
 
 promptUserAction();
