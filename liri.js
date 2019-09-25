@@ -49,6 +49,37 @@ const promptUserAction = function () {
 
 const concertSearch = function (searchKey) {
 	console.log(`Searching for nearby concerts...`);
+	let urlVar = `https://rest.bandsintown.com/artists/${searchKey}/events?app_id=codingbootcamp`
+	axios.get(urlVar)
+		.then(function (response) {
+			let bandJSON = response.data;
+
+			if (bandJSON.errormessage || bandJSON == null) {
+				console.log(`Something went wrong: ${bandJSON.errormessage}`);
+			}
+			else {
+				console.log(`Upcoming ${searchKey} concerts:`);
+				fs.appendFile('log.txt', `---- Upcoming ${searchKey} concerts: ----`, function (error) {
+					if (error) {
+						console.log(`AppendFile error: ${error}`);
+					}
+				})
+				for (let i = 0; i < bandJSON.length; i++) {
+					let resultString = `
+							${bandJSON[i].venue.name}
+							${bandJSON[i].venue.city}
+							${bandJSON[i].datetime}`;
+
+					console.log(resultString);
+					fs.appendFile('log.txt', resultString, function (error) {
+						if (error) {
+							console.log(`AppendFile error: ${error}`);
+						}
+					})
+				}
+			}
+
+		});
 }
 
 const movieSearch = function (searchKey) {
