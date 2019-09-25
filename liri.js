@@ -5,7 +5,8 @@ const inquirer = require("inquirer");
 const axios = require("axios");
 const fs = require("fs");
 const keys = require("./keys.js");
-//const spotify = new Spotify(keys.spotify);
+const Spotify = require('node-spotify-api');
+const spotify = new Spotify(keys.spotify);
 
 const parseInputString = function (userString) {
 	let searchKey = "";
@@ -71,7 +72,9 @@ const concertSearch = function (searchKey) {
 					}
 				})
 				for (let i = 0; i < bandJSON.length; i++) {
-					let resultString = `\n${bandJSON[i].venue.name}\n${bandJSON[i].venue.city}\n${bandJSON[i].datetime}`; //use moment to make that mm/dd/yy
+					let resultString = `\n${bandJSON[i].venue.name}`
+					+ `\n${bandJSON[i].venue.city}`
+					+ `\n${bandJSON[i].datetime}`; //use moment to make that mm/dd/yy
 
 					console.log(resultString);
 					fs.appendFile('log.txt', resultString, function (error) {
@@ -91,7 +94,12 @@ const movieSearch = function (searchKey) {
 	axios.get(urlVar)
 		.then(function (response) {
 			let movieJSON = response.data;
-			let resultString = `---- ${movieJSON.Title.toUpperCase()} ----\nYear: ${movieJSON.Year}\nCritical ratings: ${movieJSON.Ratings[0].Value} @IMDB, ${movieJSON.Ratings[1].Value} @Rotten Tomatoes\nProduced in ${movieJSON.Country}\nStarring ${movieJSON.Actors}\n\n${movieJSON.Plot}`;
+			let resultString = `---- ${movieJSON.Title.toUpperCase()}`
+			+ `----\nYear: ${movieJSON.Year}`
+			+`\nCritical ratings: ${movieJSON.Ratings[0].Value} @IMDB, ${movieJSON.Ratings[1].Value} @Rotten Tomatoes`
+			+`\nProduced in ${movieJSON.Country}`
+			+`\nStarring ${movieJSON.Actors}`
+			+`\n\n${movieJSON.Plot}`;
 
 			console.log(resultString);
 			fs.appendFile('log.txt', `\n\n${resultString}`, function (error) {
@@ -104,11 +112,30 @@ const movieSearch = function (searchKey) {
 
 const spotifySearch = function (searchKey) {
 	console.log(`Searching for song data...`);
-	
-	let resultString = `---- ${songname.toUpperCase()} ----
-					\nArtist: ${artist}
-					\nAlbum: ${album}
-					\nPreview on Spotify: ${previewURL}`
+
+	spotify.search({
+		type: 'track',
+		query: searchKey
+		}).then(function(response) {
+
+
+			let songJSON = response.tracks.items[0];
+			
+			let resultString = `---- ${songJSON.name.toUpperCase()} ----`
+					+`\nArtist: ${songJSON.artists[0].name}`
+					+`\nAlbum: ${songJSON.album.name}`
+					+`\nPreview on Spotify: ${songJSON.external_urls.spotify}`
+					console.log(resultString);
+					fs.appendFile('log.txt', `\n\n${resultString}`, 'utf8', function(error){
+						if (error){
+							console.log(`AppendFile error: ${error}`);
+						}
+					});
+			
+		}).catch(function(error) {
+    console.log(`Error in Spotify API: ${error}`);
+  })
+
 }
 
 const fireRandom = function () {
