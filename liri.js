@@ -22,19 +22,17 @@ const parseInputString = function (userString) {
 		searchKey = userString.slice(18);
 		spotifySearch(searchKey); // call spotify function
 	}
-	else if (userString.toLowerCase() == 'exit') {
-		exitProgram = true;
-	}
 	else // if not a valid prompt, error out
 	{
 		console.log(`Sorry, I didn't understand that input. Try again?`);
+		promptUserAction();
 	}
 }
 
 // parent function to tell user what is possible and fire inquirer process
 const promptUserAction = function () {
 	// give instructions
-	console.log(`Welcome to LIRI! Try typing one of the following: \n'concert-this <artist name>' to find nearby concerts \n'spotify-this-song <song name>' to find album and artist information on a song \n'movie-this <movie>' to get IMDB information about a movie \n'do-what-it-says' to run the contents of the included text file \nYou may also type 'exit' to quit.`)
+	console.log(`\n'concert-this <artist name>' to find nearby concerts \n'spotify-this-song <song name>' to find album and artist information on a song \n'movie-this <movie>' to get IMDB information about a movie \n'do-what-it-says' to run the contents of the included text file \nYou may also type 'exit' to quit.`)
 
 	inquirer.prompt([
 		{
@@ -44,9 +42,13 @@ const promptUserAction = function () {
 	]).then(
 		function (inquirerResponse) {
 			let userString = inquirerResponse.userInput;
+			userString = userString.toLowerCase();
 
 			if (userString.startsWith('do-what-it-says')) {
 				fireRandom(); // call random.txt
+			}
+			else if (userString.startsWith('exit')) {
+				return;
 			}
 			else {
 				parseInputString(userString);
@@ -55,7 +57,7 @@ const promptUserAction = function () {
 }
 
 const concertSearch = function (searchKey) {
-	console.log(`Searching for nearby concerts...`);
+	console.log(`Searching for nearby concerts...\n`);
 	let urlVar = `https://rest.bandsintown.com/artists/${searchKey}/events?app_id=codingbootcamp`
 	axios.get(urlVar)
 		.then(function (response) {
@@ -84,12 +86,17 @@ const concertSearch = function (searchKey) {
 					})
 				}
 			}
-
+			promptUserAction();
 		});
 }
 
 const movieSearch = function (searchKey) {
-	console.log(`Searching for movie data...`);
+	console.log(`Searching for movie data...\n`);
+	if (!searchKey){
+		console.log(`No valid search key provided! Searching for a van Dormael classic.\n`)
+		searchKey = 'Mr. Nobody';
+	}
+
 	let urlVar = `http://www.omdbapi.com/?apikey=trilogy&t=${searchKey}`
 	axios.get(urlVar)
 		.then(function (response) {
@@ -107,11 +114,16 @@ const movieSearch = function (searchKey) {
 					console.log(`AppendFile error: ${error}`);
 				}
 			})
+			promptUserAction();
 		});
 }
 
 const spotifySearch = function (searchKey) {
-	console.log(`Searching for song data...`);
+	console.log(`Searching for song data...\n`);
+	if (!searchKey){
+		console.log(`No valid search key was provided. Searching Ace of Base catalog instead.\n`);
+		searchKey = '"the sign"';
+	}
 
 	spotify.search({
 		type: 'track',
@@ -131,6 +143,7 @@ const spotifySearch = function (searchKey) {
 							console.log(`AppendFile error: ${error}`);
 						}
 					});
+			promptUserAction();
 			
 		}).catch(function(error) {
     console.log(`Error in Spotify API: ${error}`);
