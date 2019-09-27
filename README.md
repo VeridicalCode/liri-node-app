@@ -9,7 +9,7 @@ A simple command line interface runs the entire system. Simply open the file in 
 ![Running the app](/assets/demo-screencap.gif)
 
 ### concert-this
-By using axios and the Bands in Town API, this command is able to search for upcoming concerts featuring whatever band the user indicates, and print the results to the console. Because the Bands In Town returns date information in a somewhat awkward format, moment.js is also used to generate more readable dates
+By using axios and the Bands in Town API, this command is able to search for upcoming concerts featuring whatever band the user indicates, and print the results to the console. Because the Bands In Town returns date information in a somewhat awkward format, moment.js is also used to generate more readable dates.
 
 ### spotify-this-song
 This command uses Spotify's custom API to gather artist and album data on the user's indicated song. Album selection can be quirky and often returns Best Of albums instead of original release albums, an issue we're working on fixing in a future patch.
@@ -24,7 +24,7 @@ Included with the app is a file simply named **random.txt**, the contents of whi
 When giving search commands, an entry such as **movie-this October Sky** will usually return the expected result, but for best and most reliable function, adding quotes to titles with multiple words, ie **movie-this "October Sky"**, is recommended.
 
 ### Reading returned data at your leisure
-Each command prints not only to the console, but to a text file in the LIRI node folder named *log.js*, which will be created if it does not already exist. This file can be examined at the user's leisure, potentially allowing for a more comfortable reading experience than the console. Be aware, however, that due to the variable nature of line breaks across operating systems and word processing applications, some users may find that the formatting in *log.js* has failed.
+Each command prints not only to the console, but to a text file in the LIRI node folder named *log.txt*, which will be created if it does not already exist. This file can be examined at the user's leisure, potentially allowing for a more comfortable reading experience than the console. Be aware, however, that due to the variable nature of line breaks across operating systems and word processing applications, some users may find that the formatting in *log.txt* has failed.
 
 ![The log file](/assets/log-screencap.jpg)
 
