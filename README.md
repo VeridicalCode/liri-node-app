@@ -26,7 +26,7 @@ When giving search commands, an entry such as **movie-this October Sky** will us
 ### Reading returned data at your leisure
 Each command prints not only to the console, but to a text file in the LIRI node folder named *log.js*, which will be created if it does not already exist. This file can be examined at the user's leisure, potentially allowing for a more comfortable reading experience than the console. However, due to the variable nature of line breaks across operating systems and word processing applications, some users may find that the formatting in *log.js* has failed.
 
-![The log file](/assets/log-screencap.gif)
+![The log file](/assets/log-screencap.jpg)
 
 ## Who are we?
 We are Mars Getsoian, author of code and capturer of gifs, and the University of Oregon Coding Boot Camp, conceptualizer of app function and appraiser of modules.
