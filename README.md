@@ -24,9 +24,12 @@ Included with the app is a file simply named **random.txt**, the contents of whi
 When giving search commands, an entry such as **movie-this October Sky** will usually return the expected result, but for best and most reliable function, adding quotes to titles with multiple words, ie **movie-this "October Sky"**, is recommended.
 
 ### Reading returned data at your leisure
-Each command prints not only to the console, but to a text file in the LIRI node folder named *log.txt*, which will be created if it does not already exist. This file can be examined at the user's leisure, potentially allowing for a more comfortable reading experience than the console. Be aware, however, that due to the variable nature of line breaks across operating systems and word processing applications, some users may find that the formatting in *log.txt* has failed.
+Each command prints not only to the console, but to a text file in the LIRI node folder named *log.txt*, which will be created if it does not already exist. This file can be examined at the user's leisure, potentially allowing for a more comfortable reading experience than the console.
 
 ![The log file](/assets/log-screencap.jpg)
 
-## Who are we?
-We are Mars Getsoian, author of code and capturer of gifs, and the University of Oregon Coding Boot Camp, conceptualizer of app function and appraiser of modules.
+## Who Made It?
+Local code written and maintained by Mars Getsoian. Libraries (axios, moment.js) and API services (Spotify, Bands in Town, Open Movie Database) are courtesy of their respective creators.
+
+## Are There Bugs?
+Due to the variable nature of line breaks across operating systems and word processing applications, some users may find that the formatting in *log.txt* has failed.
